@@ -1,3 +1,6 @@
+
+//Cute Chef Gift
+
 import java.util.*;
 import java.io.*;
 import java.math.*;
@@ -15,7 +18,7 @@ class E {
 		}
 	}
 
-	static void solve() {
+	static void solve() throws IOException {
 
 
 

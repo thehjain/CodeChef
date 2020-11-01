@@ -1,231 +1,70 @@
-import java.util.*;
-import java.io.*;
-import java.math.*;
 
+//Chef Liked Good Sequence
 
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 class C {
 
-	static class Reader {
-		final private int BUFFER_SIZE = 1 << 16;
-		private DataInputStream din;
-		private byte[] buffer;
-		private int bufferPointer, bytesRead;
 
-		public Reader() {
-			din = new DataInputStream(System.in);
-			buffer = new byte[BUFFER_SIZE];
-			bufferPointer = bytesRead = 0;
-		}
+	public static void main(String[] args) throws IOException {
+		new C().solve();
+	}
 
-		public Reader(String file_name) throws IOException {
-			din = new DataInputStream(new FileInputStream(file_name));
-			buffer = new byte[BUFFER_SIZE];
-			bufferPointer = bytesRead = 0;
-		}
+	private void solve() throws IOException {
+		BufferedReader f = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(System.out);
 
-		public String readLine() throws IOException {
-			byte[] buf = new byte[64]; // line length
-			int cnt = 0, c;
-			while ((c = read()) != -1) {
-				if (c == '\n')
-					break;
-				buf[cnt++] = (byte) c;
+		int t = Integer.parseInt(f.readLine());
+		for (int t1 = 0; t1 < t; t1++) {
+			StringTokenizer tokenizer = new StringTokenizer(f.readLine());
+			int n = Integer.parseInt(tokenizer.nextToken());
+			int q = Integer.parseInt(tokenizer.nextToken());
+			int[] ar = new int[n];
+			tokenizer = new StringTokenizer(f.readLine());
+			for (int i = 0; i < n; i++) {
+				ar[i] = Integer.parseInt(tokenizer.nextToken());
 			}
-			return new String(buf, 0, cnt);
-		}
 
-		public int nextInt() throws IOException {
-			int ret = 0;
-			byte c = read();
-			while (c <= ' ')
-				c = read();
-			boolean neg = (c == '-');
-			if (neg)
-				c = read();
-			do {
-				ret = ret * 10 + c - '0';
-			}  while ((c = read()) >= '0' && c <= '9');
-
-			if (neg)
-				return -ret;
-			return ret;
-		}
-
-		public long nextLong() throws IOException {
-			long ret = 0;
-			byte c = read();
-			while (c <= ' ')
-				c = read();
-			boolean neg = (c == '-');
-			if (neg)
-				c = read();
-			do {
-				ret = ret * 10 + c - '0';
-			} while ((c = read()) >= '0' && c <= '9');
-			if (neg)
-				return -ret;
-			return ret;
-		}
-
-		public double nextDouble() throws IOException {
-			double ret = 0, div = 1;
-			byte c = read();
-			while (c <= ' ')
-				c = read();
-			boolean neg = (c == '-');
-			if (neg)
-				c = read();
-
-			do {
-				ret = ret * 10 + c - '0';
-			} while ((c = read()) >= '0' && c <= '9');
-
-			if (c == '.') {
-				while ((c = read()) >= '0' && c <= '9') {
-					ret += (c - '0') / (div *= 10);
+			int prev = ar[0];
+			int curr = 1;
+			for (int i = 1; i < n; i++) {
+				if (ar[i] != prev) {
+					curr++;
+					prev = ar[i];
 				}
 			}
 
-			if (neg)
-				return -ret;
-			return ret;
-		}
+			for (int q1 = 0; q1 < q; q1++) {
+				tokenizer = new StringTokenizer(f.readLine());
+				int x = Integer.parseInt(tokenizer.nextToken()) - 1;
+				int y = Integer.parseInt(tokenizer.nextToken());
 
-		private void fillBuffer() throws IOException {
-			bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
-			if (bytesRead == -1)
-				buffer[0] = -1;
-		}
-
-		private byte read() throws IOException {
-			if (bufferPointer == bytesRead)
-				fillBuffer();
-			return buffer[bufferPointer++];
-		}
-
-		public void close() throws IOException {
-			if (din == null)
-				return;
-			din.close();
-		}
-	}
-
-	private static int MAX = Integer.MAX_VALUE;
-	private static int MIN = Integer.MIN_VALUE;
-	private static int MOD = 1000000007;
-
-	//static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static Reader br = new Reader();
-
-	public static void main(String[] args)  throws IOException {
-
-		int T = br.nextInt();
-		while (T-- != 0) {
-			solve();
-		}
-	}
-
-	static void solve() throws IOException {
-
-		// String[] input = br.readLine().trim().split(" ");
-		// String[] elements = br.readLine().trim().split(" ");
-
-		int N = br.nextInt();
-		int Q = br.nextInt();
-
-		int[] arr = new int[N];
-		int index = 0;
-
-		for (index = 0; index < N; index++)
-			arr[index] = br.nextInt();
-
-		int res = 0;
-
-		for (int i = 0; i < Q; i++) {
-
-			//String[] query = br.readLine().split(" ");
-			int x = br.nextInt();
-			int y = br.nextInt();
-
-			if (i == 0)
-				res = goodSequence(arr, x, y);
-			else {
-				res = update(arr, x - 1, y, res, N);
-			}
-			System.out.println(res);
-		}
-
-	}
-
-	static int update(int[] arr, int x, int y, int res, int n) {
-
-		if (x == 0) {
-			if (n > 1 && arr[x] != arr[x + 1]) {
-				if (arr[x + 1] == y)
-					return res - 1;
-				else
-					return res;
-			} else {
-				if (n > 1 && arr[x + 1] != y)
-					return res + 1;
-				else
-					return res;
-			}
-		}
-		if (x == n - 1) {
-			if (n > 1 && arr[x] != arr[x - 1]) {
-				if (arr[x - 1] == y)
-					return res - 1;
-				else
-					return res;
-			} else {
-				if (n > 1 && arr[x] == arr[x - 1]) {
-					if (arr[x - 1] == y)
-						return res;
-					else
-						return res + 1;
+				if (x != 0) {
+					if (ar[x - 1] == ar[x]) curr++;
 				}
+				if (x != n - 1) {
+					if (ar[x + 1] == ar[x]) curr++;
+				}
+
+				ar[x] = y;
+
+				if (x != 0) {
+					if (ar[x - 1] == ar[x]) curr--;
+				}
+				if (x != n - 1) {
+					if (ar[x + 1] == ar[x]) curr--;
+				}
+
+				out.println(curr);
 			}
 		}
-		if (arr[x] != arr[x - 1] && arr[x] != arr[x + 1]) {
-			if (arr[x - 1] == y && arr[x + 1] == y)
-				return res - 2;
-			else if (arr[x - 1] != y && arr[x + 1] != y)
-				return res;
-			else
-				return res - 1;
-		} else if (arr[x] == arr[x - 1] && arr[x] == arr[x + 1]) {
-			if (arr[x - 1] == y && arr[x + 1] == y)
-				return res;
-			else if (arr[x - 1] != y && arr[x + 1] != y)
-				return res + 2;
-			else
-				return res + 1;
-		} else {
-			return res;
-		}
+
+		out.close();
 	}
-
-	static int findLongest(int[] arr) {
-		int n = arr.length;
-		int res = 0;
-		int prev = 100000000;
-		for (int i = 0; i < n; i++) {
-			if (prev != arr[i]) {
-				prev = arr[i];
-				res++;
-			}
-		}
-		return res;
-	}
-
-	static int goodSequence(int[] arr, int x, int y) {
-
-		arr[x - 1] = y;
-		return findLongest(arr);
-
-	}
-
 }
