@@ -24,75 +24,117 @@ class IronMagnet {
 	static void solve() throws IOException {
 
 		String[] input = br.readLine().trim().split(" ");
-		char[] arr = br.readLine().toCharArray();
+		String s = br.readLine();
 
 		int n = Integer.parseInt(input[0]);
 		int k = Integer.parseInt(input[1]);
 
-		int res = findMax(arr, n, k);
+		int res = findMax(s, n, k);
 		System.out.println(res);
 	}
 
-	static int findMax(char[] arr, int n, int k) {
 
-		int count = 0;
-		int sheets = 0;
-		int power = 0;
-		int indM = -1;
-		int indI = -1;
+	static int findMax(String s, int n, int k) {
 
-		int countIron = 0, countMag = 0;
-		for (char ele : arr) {
-			if (ele == 'M')
-				countMag++;
-			if (ele == 'I')
-				countIron++;
+		String l = "";
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == ':')
+				l += ":";
+			l += s.charAt(i);
 		}
 
-		if (countIron == 0 || countMag == 0 || k == 0)
-			return 0;
+		Queue<Integer> iron = new LinkedList<>();
+		Queue<Integer> magnet = new LinkedList<>();
 
-		for (int i = 0; i < n; i++) {
+		int res = 0;
 
-			if (arr[i] == 'M') {
-				if (indI != -1) {
-					power = k + 1 - Math.abs(indI - i) - sheets;
-					if (power > 0) {
-						count++;
-						indM = -1;
-					} else
-						indM = i;
-					sheets = 0;
-					power = 0;
-					indI = -1;
+		for (int i = 0; i < l.length(); i++) {
+			if (l.charAt(i) == 'I') {
+				while (!magnet.isEmpty() && Math.abs(magnet.peek() - i) > k)
+					magnet.poll();
+				if (!magnet.isEmpty()) {
+					res++;
+					magnet.poll();
 				} else
-					indM = i;
-			} else if (arr[i] == 'I') {
-				if (indM != -1) {
-					power = k + 1 - Math.abs(indM - i) - sheets;
-					if (power > 0) {
-						count++;
-						indI = -1;
-					} else
-						indI = i;
-					sheets = 0;
-					power = 0;
-					indM = -1;
+					iron.add(i);
+			} else if (l.charAt(i) == 'M') {
+				while (!iron.isEmpty() && Math.abs(iron.peek() - i) > k)
+					iron.poll();
+				if (!iron.isEmpty()) {
+					res++;
+					iron.poll();
 				} else
-					indI = i;
-			} else if (arr[i] == ':')
-				sheets++;
-			else if (arr[i] == 'X') {
-				indI = -1;
-				indM = -1;
-				power = 0;
-				sheets = 0;
+					magnet.add(i);
+			} else if (l.charAt(i) == 'X') {
+				iron.clear();
+				magnet.clear();
 			}
 		}
-		return count;
+		return res;
 	}
 
 }
+
+// 	static int findMax(char[] arr, int n, int k) {
+
+// 		int count = 0;
+// 		int sheets = 0;
+// 		int power = 0;
+// 		int indM = -1;
+// 		int indI = -1;
+
+// 		int countIron = 0, countMag = 0;
+// 		for (char ele : arr) {
+// 			if (ele == 'M')
+// 				countMag++;
+// 			if (ele == 'I')
+// 				countIron++;
+// 		}
+
+// 		if (countIron == 0 || countMag == 0 || k == 0)
+// 			return 0;
+
+// 		for (int i = 0; i < n; i++) {
+
+// 			if (arr[i] == 'M') {
+// 				if (indI != -1) {
+// 					power = k + 1 - Math.abs(indI - i) - sheets;
+// 					if (power > 0) {
+// 						count++;
+// 						indM = -1;
+// 					} else
+// 						indM = i;
+// 					sheets = 0;
+// 					power = 0;
+// 					indI = -1;
+// 				} else
+// 					indM = i;
+// 			} else if (arr[i] == 'I') {
+// 				if (indM != -1) {
+// 					power = k + 1 - Math.abs(indM - i) - sheets;
+// 					if (power > 0) {
+// 						count++;
+// 						indI = -1;
+// 					} else
+// 						indI = i;
+// 					sheets = 0;
+// 					power = 0;
+// 					indM = -1;
+// 				} else
+// 					indI = i;
+// 			} else if (arr[i] == ':')
+// 				sheets++;
+// 			else if (arr[i] == 'X') {
+// 				indI = -1;
+// 				indM = -1;
+// 				power = 0;
+// 				sheets = 0;
+// 			}
+// 		}
+// 		return count;
+// 	}
+
+// }
 
 
 // for (int i = 0; i < n; i++) {
