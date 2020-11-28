@@ -20,7 +20,7 @@ class A {
 
 	static void solve() throws IOException {
 
-
+		System.out.println("hello");
 
 	}
 
