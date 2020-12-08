@@ -169,7 +169,7 @@ class E {
 	// }
 
 	static void hailXor(int N, int X, int[] arr) {
-		X = Math.min(X, N);
+		//X = Math.min(X, N);
 		for (int iterator = 0; iterator < X; iterator++) {
 			int i = 0, j = 1;
 			while (arr[i] == 0 && i < N - 2) i++;
