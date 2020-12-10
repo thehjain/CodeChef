@@ -131,23 +131,23 @@ class E {
 		// int X = Integer.parseInt(input[1]);
 
 		int N = br.nextInt();
-		int X = br.nextInt();
+		long X = br.nextInt();
 
 		//X = Math.min(N, X);
 
 		//String[] s = br.readLine().trim().split(" ");
 
-		int[] arr = new int[N];
+		long[] arr = new long[N];
 		// int index = 0;
 		// for (String ele : s)
 		// 	arr[index++] = ;
 
 		for (int i = 0; i < N; i++)
-			arr[i] = br.nextInt();
+			arr[i] = br.nextLong();
 
 		hailXor(N, X, arr);
 
-		for (int ele : arr)
+		for (long ele : arr)
 			System.out.print(ele + " ");
 
 		System.out.println();
@@ -168,27 +168,47 @@ class E {
 	// 	}
 	// }
 
-	static void hailXor(int N, int X, int[] arr) {
-		//X = Math.min(X, N);
-		for (int iterator = 0; iterator < X; iterator++) {
-			int i = 0, j = 1;
-			while (arr[i] == 0 && i < N - 2) i++;
-			int temp = findPower(arr[i]);
-			while (j < N) {
-				int curr = findPower(arr[j]);
-				if (temp == curr) {
-					arr[i] ^= temp;
-					arr[j] ^= temp;
-					break;
-				}
-				if (j == N - 1) {
-					arr[i] ^= temp;
-					arr[j] ^= temp;
-				}
+	static void hailXor(int N, long X, long[] arr) {
+		int j = 0;
+		long i = 0;
+		while (i < X) {
+			if (j == N - 1) break;
+			if (arr[j] == 0) {
 				j++;
+				continue;
 			}
+			long pow = findPower(arr[j]);
+			int k = j + 1;
+			for (; k < N - 1; k++) {
+				long temp = arr[k] ^ pow;
+				if (temp < arr[k]) break;
+			}
+			arr[j] = arr[j] ^ pow;
+			arr[k] = arr[k] ^ pow;
+			i++;
+		}
+		long rem = X - i;
+		if (N == 2 && rem > 0 && rem % 2 == 0) {
+			arr[N - 1] ^= 1;
+			arr[N - 2] ^= 1;
 		}
 	}
+
+	// static void hailXor(int N, int X, int[] arr) {
+
+	// 	for (int index = 0; index < N - 1; index++) {
+	// 		int i = 0, j = 1;
+	// 		while (arr[i] == 0 && i < N - 2) i++;
+	// 		j = i + 1;
+	// 		if (j == N) break;
+	// 		int p = findPower(Math.min(arr[i], arr[j]));
+	// 		arr[i] ^= p;
+	// 		arr[j] ^= p;
+	// 		// i++;
+	// 		// j++;
+	// 	}
+
+	// }
 
 	// static void hailXor(int N, int X, int[] arr) {
 
@@ -224,13 +244,17 @@ class E {
 	// 		// System.out.println();
 	// 	}
 	// }
-	static int findPower(int n) {
+	static long findPower(long n) {
 
-		if (n == 0) return 1;
+		long num = 1;
 
-		int p = (int)(Math.log(n) /
-		              Math.log(2));
-		return (int)Math.pow(2, p);
+		while (num < n) {
+			num = num * 2;
+		}
+		if (num != n)
+			num = num / 2;
+		return num;
+
 	}
 }
 
