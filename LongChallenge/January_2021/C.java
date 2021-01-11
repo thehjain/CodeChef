@@ -1,68 +1,87 @@
 import java.util.*;
 import java.io.*;
-import java.math.*;
-
 class C {
+	public static void main(String []args) {
+		FastScanner KB = new FastScanner();
+		int T = KB.nextInt();
+		for (int k = 1; k <= T; k++) {
+			long N = KB.nextLong();
+			Map<Long, Long> mp = new HashMap<>();
+			ArrayList<Long>[] arrmain = new ArrayList[(int) N];
 
-	private static int MAX = Integer.MAX_VALUE;
-	private static int MIN = Integer.MIN_VALUE;
-	private static int MOD = 1000000007;
-	static FastScanner sc = new FastScanner();
+			for (int kk = 0; kk < N; kk++) {
+				long M = KB.nextLong();
+				ArrayList<Long> arr1 = new ArrayList<Long>();
+				for (int j = 0; j < M; j++) {
+					arr1.add(KB.nextLong());
+				}
+				// System.out.println(arr1);
+				arrmain[kk] = arr1;
 
-	public static void main(String[] args) throws IOException {
-		int T = sc.nextInt();
-		while (T-- > 0) {
-			solve();
-		}
-	}
-
-	static void solve() throws IOException {
-
-		int n = sc.nextInt();
-
-		HashSet<Integer> set = new HashSet<>();
-		long countNeg = 0;
-		long countPos = 0;
-
-		long res = 0;
-
-		for (int i = 0; i < n; i++) {
-			int m = sc.nextInt();
-			set.clear();
-			for (int j = 0; j < m; j++) {
-				int temp = sc.nextInt();
-				if (!set.contains(temp)) {
-					set.add(temp);
-					if (temp < 0) countNeg++;
-					else if (temp > 0) countPos++;
+				for (int i = 0; i < arr1.size(); i++) {
+					if (mp.containsKey(Math.abs(arr1.get(i)))) {
+						mp.put(Math.abs(arr1.get(i)), mp.get(Math.abs(arr1.get(i))) + 1);
+					} else {
+						mp.put(Math.abs(arr1.get(i)), (long) 1);
+					}
 				}
 			}
-			res += countPos * countNeg;
+
+			long tcoun = 0;
+			for (int i = 0; i < N; i++) {
+				ArrayList<Long> arrv2 = arrmain[i];
+				ArrayList<Long> pos = new ArrayList<Long>();
+				ArrayList<Long> neg = new ArrayList<Long>();
+				// System.out.println(arrv2);
+				for (int j = 0; j < arrv2.size(); j++) {
+					long kp = arrv2.get(j);
+					if (kp < 0) {
+						neg.add(- (kp));
+					} else {
+						pos.add(kp);
+					}
+				}
+				Collections.sort(pos);
+				Collections.sort(neg);
+
+				// System.out.println(pos);
+				// System.out.println(neg);
+
+				for (int j = 0; j < pos.size(); j++) {
+					if (mp.get(pos.get(j)) > 1) {
+						tcoun += (pos.size() - j - 1);
+					} else {
+						tcoun += neg.size() - Math.abs(Collections.binarySearch(neg, pos.get(j))) + 1;
+					}
+				}
+
+				for (int j = 0; j < neg.size(); j++) {
+					if (mp.get(neg.get(j)) > 1) {
+						tcoun += (neg.size() - j - 1);
+					} else {
+						tcoun += pos.size() - Math.abs(Collections.binarySearch(pos, neg.get(j))) + 1;
+					}
+				}
+			}
+
+			long orcolli = 0;
+			for (Map.Entry<Long, Long> entry : mp.entrySet()) {
+				if (entry.getValue() > 1) {
+					orcolli++;
+				}
+			}
+			System.out.println(orcolli + tcoun);
+
+//          for (Map.Entry<Long,Long> entry : mp.entrySet())
+//          {
+//              System.out.println(entry.getKey() + " " + entry.getValue());
+//          }
+//          for (int i = 0; i < arrmain.length; i++)
+//          {
+//           	ArrayList<Long> arr2=arrmain[i];
+//            	System.out.println(arr2);
+//			}
 		}
-
-		// System.out.println(countPos + " " + countNeg);
-		// if (n == 1)
-		// 	res = countNeg * countPos;
-
-		System.out.println(res);
-	}
-
-	static long countOne(int n) {
-
-		if (n == 1) return 1;
-
-		else
-			return (n / 2) * (2 * 1 + (n - 1) * 1);
-
-	}
-
-	static long count(int n) {
-
-		if (n == 1) return 1;
-
-		else
-			return (n / 2) * (2 * 1 + (n - 1) * 2);
-
 	}
 
 	static class FastScanner {
@@ -99,5 +118,4 @@ class C {
 			}
 		}
 	}
-
 }
