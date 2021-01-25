@@ -10,10 +10,12 @@ class A {
 	static FastScanner sc = new FastScanner();
 	static boolean[] prime = new boolean[1000001];
 	static StringBuilder sb = new StringBuilder();
+	static int[] res = new int[1000001];
 
 	public static void main(String[] args) throws IOException {
 		int T = sc.nextInt();
 		fillPrime();
+		fillRes();
 		while (T-- > 0) {
 			solve();
 		}
@@ -23,18 +25,16 @@ class A {
 	static void solve() throws IOException {
 
 		int n = sc.nextInt();
-		int res = 0;
+		sb.append(res[n] + "\n");
+	}
 
-		int a = 2;
-
-		for (int i = 3; i <= n; i++) {
-
+	static void fillRes() {
+		int count = 0;
+		for (int i = 5; i <= 1000000; i++) {
 			if (prime[i] && prime[i - 2])
-				res++;
-
+				count++;
+			res[i] = count;
 		}
-
-		sb.append(res + "\n");
 	}
 
 	static void fillPrime() {
