@@ -8,30 +8,62 @@ class C {
 	private static int MIN = Integer.MIN_VALUE;
 	private static int MOD = 1000000007;
 	static FastScanner sc = new FastScanner();
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		int T = sc.nextInt();
 		while (T-- > 0) {
 			solve();
 		}
+		System.out.println(sb);
 	}
 
 	static void solve() throws IOException {
 
 		int n = sc.nextInt();
+
 		int[] arr = new int[n];
+		int[] freq = new int[n + 2];
 
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			arr[i] = sc.nextInt();
-
-		int[] left = new int[n];
-		int[] right = new int[n];
-
-		left[0] = arr[0];
-
-		for (int i = 1; i < )
-
+			freq[arr[i]]++;
 		}
+
+		int mex = 0;
+
+		while (freq[mex] != 0) {
+			mex++;
+		}
+
+		long[] dp = new long[n];
+		long[] sf = new long[n + 1];
+		HashMap<Integer, Integer> map = new HashMap<>();
+		TreeSet<Integer> set = new TreeSet<>();
+
+		for (int i = n - 1; i >= 0; i--) {
+			if (arr[i] < mex) {
+				if (map.containsKey(arr[i])) {
+					set.remove(map.get(arr[i]));
+					set.add(i);
+					map.put(arr[i], i);
+				} else {
+					map.put(arr[i], i);
+					set.add(i);
+				}
+			}
+			if (map.size() == mex) {
+				if (mex == 0)
+					dp[i] = 1 + sf[i + 1];
+				else
+					dp[i] = 1 + sf[set.last() + 1];
+			}
+			dp[i] %= MOD;
+			sf[i] = dp[i] + sf[i + 1];
+			sf[i] %= MOD;
+		}
+		sb.append(dp[n] + "\n");
+	}
 
 	static class FastScanner {
 		public BufferedReader reader;
