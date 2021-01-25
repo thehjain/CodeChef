@@ -18,7 +18,65 @@ class B {
 
 	static void solve() throws IOException {
 
+		int n = sc.nextInt();
+		int m = sc.nextInt();
 
+		char[][] grid = new char[n][m];
+
+		for (int i = 0; i < n; i++)
+			grid[i] = sc.next().toCharArray();
+
+		int res1 = 0;
+		int res2 = 0;
+
+		for (int i = 0; i < n; i++) {
+			boolean flag = false;
+			if (i % 2 == 0) flag = true;
+			for (int j = 0; j < m; j++) {
+				if (flag) {
+					if (j % 2 == 0 && grid[i][j] == '*')
+						continue;
+					else if (j % 2 != 0 && grid[i][j] == '.')
+						continue;
+					else
+						res1++;
+				} else {
+					if (j % 2 == 0 && grid[i][j] == '.')
+						continue;
+					else if (j % 2 != 0 && grid[i][j] == '*')
+						continue;
+					else
+						res1++;
+				}
+			}
+		}
+
+		for (int i = 0; i < n; i++) {
+			boolean flag = false;
+			if (i % 2 != 0) flag = true;
+			for (int j = 0; j < m; j++) {
+				if (flag) {
+					if (j % 2 == 0 && grid[i][j] == '*')
+						continue;
+					else if (j % 2 != 0 && grid[i][j] == '.')
+						continue;
+					else
+						res2++;
+				} else {
+					if (j % 2 == 0 && grid[i][j] == '.')
+						continue;
+					else if (j % 2 != 0 && grid[i][j] == '*')
+						continue;
+					else
+						res2++;
+				}
+			}
+		}
+		if (grid.length % 2 != 0) {
+			System.out.println(res1);
+			return;
+		}
+		System.out.println(Math.min(res1, res2));
 
 	}
 

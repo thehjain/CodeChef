@@ -8,18 +8,56 @@ class A {
 	private static int MIN = Integer.MIN_VALUE;
 	private static int MOD = 1000000007;
 	static FastScanner sc = new FastScanner();
+	static boolean[] prime = new boolean[1000001];
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		int T = sc.nextInt();
+		fillPrime();
 		while (T-- > 0) {
 			solve();
 		}
+		System.out.println(sb);
 	}
 
 	static void solve() throws IOException {
 
+		int n = sc.nextInt();
+		int res = 0;
+		int size = 0;
 
+		for (int i = 1; i <= n; i++)
+			if (prime[i])
+				size++;
 
+		int[] arr = new int[size];
+		int index = 0;
+
+		for (int i = 0; i <= n; i++)
+			if (prime[i])
+				arr[index++] = i;
+
+		for (int i = 0; i < size - 2; i++) {
+			for (int j = i + 1; j < size - 1; j++) {
+				if (arr[i] + arr[j] <= n && prime[arr[i] + arr[j]])
+					res++;
+			}
+		}
+
+		sb.append(res + "\n");
+	}
+
+	static void fillPrime() {
+		int n = 1000000;
+		for (int i = 0; i <= n; i++)
+			prime[i] = true;
+
+		for (int p = 2; p * p <= n; p++) {
+			if (prime[p] == true) {
+				for (int i = p * p; i <= n; i += p)
+					prime[i] = false;
+			}
+		}
 	}
 
 	static class FastScanner {

@@ -18,9 +18,20 @@ class C {
 
 	static void solve() throws IOException {
 
+		int n = sc.nextInt();
+		int[] arr = new int[n];
 
+		for (int i = 0; i < n; i++)
+			arr[i] = sc.nextInt();
 
-	}
+		int[] left = new int[n];
+		int[] right = new int[n];
+
+		left[0] = arr[0];
+
+		for (int i = 1; i < )
+
+		}
 
 	static class FastScanner {
 		public BufferedReader reader;
