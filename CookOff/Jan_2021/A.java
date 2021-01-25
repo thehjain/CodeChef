@@ -24,24 +24,14 @@ class A {
 
 		int n = sc.nextInt();
 		int res = 0;
-		int size = 0;
 
-		for (int i = 1; i <= n; i++)
-			if (prime[i])
-				size++;
+		int a = 2;
 
-		int[] arr = new int[size];
-		int index = 0;
+		for (int i = 3; i <= n; i++) {
 
-		for (int i = 0; i <= n; i++)
-			if (prime[i])
-				arr[index++] = i;
+			if (prime[i] && prime[i - 2])
+				res++;
 
-		for (int i = 0; i < size - 2; i++) {
-			for (int j = i + 1; j < size - 1; j++) {
-				if (arr[i] + arr[j] <= n && prime[arr[i] + arr[j]])
-					res++;
-			}
 		}
 
 		sb.append(res + "\n");
