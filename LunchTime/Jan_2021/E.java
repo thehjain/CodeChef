@@ -23,7 +23,7 @@ class E {
 		int n = sc.nextInt();
 		int k = sc.nextInt();
 
-		if (n == k || ((long)(Math.pow(n, 2)) - k) % n == 0 || (k >= 0 && k <= n))
+		if (n == k || ((int)(Math.pow(n, 2))) == k || k == 1)
 			sb.append("Yes" + "\n");
 		else
 			sb.append("No" + "\n");
