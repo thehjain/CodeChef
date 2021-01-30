@@ -23,11 +23,22 @@ class E {
 		int n = sc.nextInt();
 		int k = sc.nextInt();
 
-		if (n == k || ((int)(Math.pow(n, 2))) == k || k == 1)
+		if (isperfect(k, n))
 			sb.append("Yes" + "\n");
 		else
 			sb.append("No" + "\n");
 
+	}
+
+	static boolean isperfect(int x, int n) {
+		for (int i = 1; i <= n; i++) {
+			if (x % i == 0) {
+				if (x / i <= n) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	static class FastScanner {
