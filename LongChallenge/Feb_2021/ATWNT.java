@@ -18,7 +18,6 @@ class ATWNT {
 
 	static void solve() throws IOException {
 
-		System.out.println("hello");
 
 	}
 
