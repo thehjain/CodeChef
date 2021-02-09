@@ -25,7 +25,7 @@ class PRIGAME {
 		int x = sc.nextInt();
 		int y = sc.nextInt();
 
-		System.out.println(prime[1000000]);
+		// System.out.println(prime[1000000]);
 
 		if (x == 1) {
 			sb.append("Chef\n");
