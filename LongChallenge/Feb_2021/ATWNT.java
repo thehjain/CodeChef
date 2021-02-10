@@ -7,52 +7,196 @@ class ATWNT {
 	private static int MAX = Integer.MAX_VALUE;
 	private static int MIN = Integer.MIN_VALUE;
 	private static int MOD = 1000000007;
-	static FastScanner sc = new FastScanner();
+	static Reader sc = new Reader();
+	static StringBuilder sb = new StringBuilder();
+	// static HashMap<Integer,Long> dp=new HashMap<>();
 
 	public static void main(String[] args) throws IOException {
-		int T = sc.nextInt();
-		while (T-- > 0) {
-			solve();
-		}
+		// int T = sc.nextInt();
+		// while (T-- > 0) {
+		solve();
+		System.out.print(sb);
+		// }
 	}
 
 	static void solve() throws IOException {
 
+		int n = sc.nextInt();
+
+		HashMap<Integer, Integer> parent = new HashMap<>();
+		HashMap<Integer, Integer> child = new HashMap<>();
+		ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+
+		for (int i = 0; i <= n; i++) {
+			arr.add(new ArrayList<>());
+		}
+
+		for (int i = 2; i <= n; i++)
+			parent.put(i, sc.nextInt());
+
+		for (int i = 2; i <= n; i++) {
+			int tempParent = parent.get(i);
+			if (!child.containsKey(tempParent))
+				child.put(tempParent, 0);
+			child.put(tempParent, child.get(tempParent) + 1);
+		}
+
+		for (int i = 1; i <= n; i++)
+			if (!child.containsKey(i))
+				child.put(i, 0);
+
+		for (int i = 2; i <= n; i++) {
+			arr.get(parent.get(i)).add(i);
+		}
+
+		int noOfQueries = sc.nextInt();
+
+		while (noOfQueries-- > 0) {
+
+			int node = sc.nextInt();
+			long query = sc.nextLong();
+
+			long sum = findRemaining(arr, parent, child, query, n, node);
+
+			sb.append((query - sum) + "\n");
+
+		}
 
 	}
 
-	static class FastScanner {
-		public BufferedReader reader;
-		public StringTokenizer tokenizer;
-		public FastScanner() {
-			reader = new BufferedReader(new InputStreamReader(System.in), 32768);
-			tokenizer = null;
+	static long findRemaining(ArrayList<ArrayList<Integer>> arr, HashMap<Integer, Integer> parent,
+	                          HashMap<Integer, Integer> child, long query, int n, int node) {
+
+		if (child.get(node) == 0) {
+			return query;
 		}
-		public String next() {
-			while (tokenizer == null || !tokenizer.hasMoreTokens()) {
-				try {
-					tokenizer = new StringTokenizer(reader.readLine());
-				} catch (IOException e) {
-					throw new RuntimeException(e);
+
+		if (query % child.get(node) != 0)
+			return 0;
+
+
+
+		long temp = query / child.get(node);
+		long sum = 0;
+
+		for (int i = 0; i < arr.get(node).size(); i++) {
+			sum += findRemaining(arr, parent, child, temp, n, arr.get(node).get(i));
+		}
+
+		return sum;
+
+	}
+
+	static class Reader {
+		final private int BUFFER_SIZE = 1 << 16;
+		private DataInputStream din;
+		private byte[] buffer;
+		private int bufferPointer, bytesRead;
+
+		public Reader() {
+			din = new DataInputStream(System.in);
+			buffer = new byte[BUFFER_SIZE];
+			bufferPointer = bytesRead = 0;
+		}
+
+		public Reader(String file_name) throws IOException {
+			din = new DataInputStream(
+			    new FileInputStream(file_name));
+			buffer = new byte[BUFFER_SIZE];
+			bufferPointer = bytesRead = 0;
+		}
+
+		public String readLine() throws IOException {
+			byte[] buf = new byte[64]; // line length
+			int cnt = 0, c;
+			while ((c = read()) != -1) {
+				if (c == '\n') {
+					if (cnt != 0) {
+						break;
+					} else {
+						continue;
+					}
+				}
+				buf[cnt++] = (byte)c;
+			}
+			return new String(buf, 0, cnt);
+		}
+
+		public int nextInt() throws IOException {
+			int ret = 0;
+			byte c = read();
+			while (c <= ' ') {
+				c = read();
+			}
+			boolean neg = (c == '-');
+			if (neg)
+				c = read();
+			do {
+				ret = ret * 10 + c - '0';
+			} while ((c = read()) >= '0' && c <= '9');
+
+			if (neg)
+				return -ret;
+			return ret;
+		}
+
+		public long nextLong() throws IOException {
+			long ret = 0;
+			byte c = read();
+			while (c <= ' ')
+				c = read();
+			boolean neg = (c == '-');
+			if (neg)
+				c = read();
+			do {
+				ret = ret * 10 + c - '0';
+			} while ((c = read()) >= '0' && c <= '9');
+			if (neg)
+				return -ret;
+			return ret;
+		}
+
+		public double nextDouble() throws IOException {
+			double ret = 0, div = 1;
+			byte c = read();
+			while (c <= ' ')
+				c = read();
+			boolean neg = (c == '-');
+			if (neg)
+				c = read();
+
+			do {
+				ret = ret * 10 + c - '0';
+			} while ((c = read()) >= '0' && c <= '9');
+
+			if (c == '.') {
+				while ((c = read()) >= '0' && c <= '9') {
+					ret += (c - '0') / (div *= 10);
 				}
 			}
-			return tokenizer.nextToken();
+
+			if (neg)
+				return -ret;
+			return ret;
 		}
-		public int nextInt() {
-			return Integer.parseInt(next());
+
+		private void fillBuffer() throws IOException {
+			bytesRead = din.read(buffer, bufferPointer = 0,
+			                     BUFFER_SIZE);
+			if (bytesRead == -1)
+				buffer[0] = -1;
 		}
-		public long nextLong() {
-			return Long.parseLong(next());
+
+		private byte read() throws IOException {
+			if (bufferPointer == bytesRead)
+				fillBuffer();
+			return buffer[bufferPointer++];
 		}
-		public double nextDouble() {
-			return Double.parseDouble(next());
-		}
-		public String nextLine() {
-			try {
-				return reader.readLine();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+
+		public void close() throws IOException {
+			if (din == null)
+				return;
+			din.close();
 		}
 	}
 
