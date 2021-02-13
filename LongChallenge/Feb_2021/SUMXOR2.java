@@ -9,9 +9,11 @@ class SUMXOR2 {
 	private static int MOD = 998244353;
 	static Reader sc = new Reader();
 	static StringBuilder sb = new StringBuilder();
-	// static long sum = 0;
-	static HashMap<Integer, Long> map = new HashMap<>();
-	static HashMap<Integer, Long> res = new HashMap<>();
+	static long[] fact;
+	static int[] noOfOnes;
+	static int[] noOfZeros;
+	static long[] prefix;
+	static long[] sum;
 
 	public static void main(String[] args) throws IOException {
 		// int T = sc.nextInt();
@@ -23,75 +25,108 @@ class SUMXOR2 {
 	static void solve() throws IOException {
 
 		int n = sc.nextInt();
+		int[] arr = new int[n];
 
-		long[] arr = new long[n];
+		int max = MIN;
 
-		for (int i = 0; i < n; i++)
-			arr[i] = sc.nextLong();
+		for (int i = 0; i < n; i++) {
+			arr[i] = sc.nextInt();
+			if (arr[i] > max)
+				max = arr[i];
+		}
+
+		fact = new long[n + 1];
+
+		fillFact(n);
+
+		int size = powerOf2(max);
+
+		noOfOnes = new int[size + 1];
+		noOfZeros = new int[size + 1];
+		prefix = new long[n + 1];
+		sum = new long[n + 1];
+
+		// System.out.println(size);
+
+		fillOnesZeros(arr, n, size);
+		fillSumArray(arr, size, n);
 
 		int noOfQueries = sc.nextInt();
 
 		while (noOfQueries-- > 0) {
 
 			int length = sc.nextInt();
-			long sum = 0;
 
-			if (res.containsKey(length)) {
-				sb.append(res.get(length) + "\n");
-				continue;
-			}
-
-			for (int i = 1; i <= length; i++) {
-				if (map.containsKey(i)) {
-					sum =  (sum % MOD + map.get(i) % MOD) % MOD;
-					continue;
-				}
-				sum = (sum % MOD + findSum(arr, n, i, 0, 0) % MOD) % MOD;
-			}
-
-			res.put(length, sum);
-
-			sb.append(sum + "\n");
+			sb.append(prefix[length] + "\n");
 
 		}
 
 		System.out.print(sb);
-	}
-
-	static long findSum(long[] arr, int n, int length, int currLength, long tempSum) {
-
-		// System.out.println(tempSum);2
-
-		if (currLength == length)
-			return tempSum % MOD;
-		if (n == 0)
-			return 0;
-		if (currLength > length)
-			return 0;
-
-		long temp = (findSum(arr, n - 1, length, currLength, tempSum) % MOD +
-		             findSum(arr, n - 1, length, currLength + 1, tempSum ^ arr[n - 1]) % MOD) % MOD;
-		map.put(length, temp);
-		return temp;
 
 	}
 
-	// static void findXor(long[] arr, int pos, int n, int len, long curr) {
+	static void fillSumArray(int[] arr, int size, int n) {
 
-	// 	if (pos == len) {
-	// 		// System.out.println(curr);
-	// 		if (!map.containsKey(len))
-	// 			map.put(len, (long)0);
-	// 		map.put(len, map.get(len) + curr % MOD);
-	// 		return;
-	// 	}
+		for (int i = 1; i <= n; i++) {
 
-	// 	for (int i = 0 ; i < n; i++) {
-	// 		// System.out.println(arr[i]);
-	// 		findXor(arr, pos + 1, n, len, curr ^ arr[i]);
-	// 	}
+			long ans = 0;
 
-	// }
+			// System.out.println(size);
+
+			for (int k = 1; k <= i; k += 2)
+				for (int j = 0; j <= size; j++)
+					ans = (ans % MOD + (((nCr(noOfOnes[j], k) % MOD * nCr(noOfZeros[j], i - k) % MOD)) % MOD * (1 << (j)) % MOD) % MOD) % MOD;
+
+			sum[i] = ans;
+
+			// System.out.println(ans);
+
+			if (i == 1)
+				prefix[i] = sum[i] % MOD;
+			else
+				prefix[i] = (prefix[i - 1] % MOD + sum[i] % MOD) % MOD;
+
+		}
+
+	}
+
+	static void fillFact(int n) {
+
+		fact[0] = 1;
+		fact[1] = 1;
+
+		for (int i = 2; i <= n; i++) {
+			fact[i] = (fact[i - 1] % MOD * i % MOD) % MOD;
+		}
+
+	}
+
+	static void fillOnesZeros(int[] arr, int n, int size) {
+
+		for (int i = 0; i <= size; i++) {
+			for (int j = 0; j < n; j++) {
+				if ((arr[j] & 1 << i) > 0)
+					noOfOnes[i]++;
+				else
+					noOfZeros[i]++;
+			}
+		}
+
+	}
+
+	static int powerOf2(int n) {
+		int pos = (int)Math.floor((Math.log(n) / Math.log(2)));
+		return pos;
+	}
+
+	static int nCr(int n, int r) {
+		// System.out.println(n + " " + r);
+		if (n < r)
+			return 0;
+		return (int)(fact[n] / (fact[r] % MOD *
+		                        fact[n - r] % MOD) % MOD);
+	}
+
 
 	static class Reader {
 		final private int BUFFER_SIZE = 1 << 16;
