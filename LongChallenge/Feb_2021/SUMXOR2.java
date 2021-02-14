@@ -25,12 +25,12 @@ class SUMXOR2 {
 	static void solve() throws IOException {
 
 		int n = sc.nextInt();
-		int[] arr = new int[n];
+		long[] arr = new long[n];
 
-		int max = MIN;
+		long max = Long.MIN_VALUE;
 
 		for (int i = 0; i < n; i++) {
-			arr[i] = sc.nextInt();
+			arr[i] = sc.nextLong();
 			if (arr[i] > max)
 				max = arr[i];
 		}
@@ -65,7 +65,7 @@ class SUMXOR2 {
 
 	}
 
-	static void fillSumArray(int[] arr, int size, int n) {
+	static void fillSumArray(long[] arr, int size, int n) {
 
 		for (int i = 1; i <= n; i++) {
 
@@ -74,17 +74,19 @@ class SUMXOR2 {
 			// System.out.println(size);
 
 			for (int k = 1; k <= i; k += 2)
-				for (int j = 0; j <= size; j++)
-					ans = (ans % MOD + (((nCr(noOfOnes[j], k) % MOD * nCr(noOfZeros[j], i - k) % MOD)) % MOD * (1 << (j)) % MOD) % MOD) % MOD;
+				for (int j = 0; j <= size; j++) {
+					// System.out.println(ans);
+					ans  = (ans + (nCr(noOfOnes[j], k) * nCr(noOfZeros[j], i - k)  * (1 << (j))) % MOD);
+				}
 
 			sum[i] = ans;
 
 			// System.out.println(ans);
 
 			if (i == 1)
-				prefix[i] = sum[i] % MOD;
+				prefix[i] = sum[i];
 			else
-				prefix[i] = (prefix[i - 1] % MOD + sum[i] % MOD) % MOD;
+				prefix[i] = (prefix[i - 1] + sum[i]) % MOD;
 
 		}
 
@@ -96,12 +98,12 @@ class SUMXOR2 {
 		fact[1] = 1;
 
 		for (int i = 2; i <= n; i++) {
-			fact[i] = (fact[i - 1] % MOD * i % MOD) % MOD;
+			fact[i] = (fact[i - 1] * i) % MOD;
 		}
 
 	}
 
-	static void fillOnesZeros(int[] arr, int n, int size) {
+	static void fillOnesZeros(long[] arr, int n, int size) {
 
 		for (int i = 0; i <= size; i++) {
 			for (int j = 0; j < n; j++) {
@@ -114,8 +116,10 @@ class SUMXOR2 {
 
 	}
 
-	static int powerOf2(int n) {
-		int pos = (int)Math.floor((Math.log(n) / Math.log(2)));
+	static int powerOf2(long n) {
+		// System.out.println(n);
+		int pos = (int)(Math.log(n) / Math.log(2));
+		// System.out.println(pos);
 		return pos;
 	}
 
@@ -123,8 +127,10 @@ class SUMXOR2 {
 		// System.out.println(n + " " + r);
 		if (n < r)
 			return 0;
-		return (int)(fact[n] / (fact[r] % MOD *
-		                        fact[n - r] % MOD) % MOD);
+		if (n == r)
+			return 1;
+		return (int)(fact[n]  / (fact[r]  *
+		                         fact[n - r]) % MOD);
 	}
 
 

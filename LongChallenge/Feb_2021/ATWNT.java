@@ -49,14 +49,15 @@ class ATWNT {
 			arr.get(parent.get(i)).add(i);
 		}
 
+
 		int noOfQueries = sc.nextInt();
 
 		while (noOfQueries-- > 0) {
 
 			int node = sc.nextInt();
-			long query = sc.nextLong();
+			int query = sc.nextInt();
 
-			long sum = findRemaining(arr, parent, child, query, n, node);
+			int sum = findRemaining(arr, child, query, node);
 
 			sb.append((query - sum) + "\n");
 
@@ -64,8 +65,8 @@ class ATWNT {
 
 	}
 
-	static long findRemaining(ArrayList<ArrayList<Integer>> arr, HashMap<Integer, Integer> parent,
-	                          HashMap<Integer, Integer> child, long query, int n, int node) {
+	static int findRemaining(ArrayList<ArrayList<Integer>> arr,
+	                         HashMap<Integer, Integer> child, int query, int node) {
 
 		if (child.get(node) == 0) {
 			return query;
@@ -76,11 +77,11 @@ class ATWNT {
 
 
 
-		long temp = query / child.get(node);
-		long sum = 0;
+		int temp = query / child.get(node);
+		int sum = 0;
 
 		for (int i = 0; i < arr.get(node).size(); i++) {
-			sum += findRemaining(arr, parent, child, temp, n, arr.get(node).get(i));
+			sum += findRemaining(arr, child, temp, arr.get(node).get(i));
 		}
 
 		return sum;
