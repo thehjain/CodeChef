@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.math.*;
 
-class XOREQUAL {
+class ISS {
 
 	private static int MAX = Integer.MAX_VALUE;
 	private static int MIN = Integer.MIN_VALUE;
@@ -18,7 +18,7 @@ class XOREQUAL {
 
 	static void solve() throws IOException {
 
-		System.out.println("hello");
+
 
 	}
 
