@@ -92,29 +92,7 @@ class SUMXOR2 {
 
 	}
 
-	static void fillFact(int n) {
 
-		fact[0] = 1;
-		fact[1] = 1;
-
-		for (int i = 2; i <= n; i++) {
-			fact[i] = (fact[i - 1] * i) % MOD;
-		}
-
-	}
-
-	static void fillOnesZeros(long[] arr, int n, int size) {
-
-		for (int i = 0; i <= size; i++) {
-			for (int j = 0; j < n; j++) {
-				if ((arr[j] & 1 << i) > 0)
-					noOfOnes[i]++;
-				else
-					noOfZeros[i]++;
-			}
-		}
-
-	}
 
 	static int powerOf2(long n) {
 		// System.out.println(n);
