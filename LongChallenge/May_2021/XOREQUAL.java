@@ -8,17 +8,32 @@ class XOREQUAL {
 	private static int MIN = Integer.MIN_VALUE;
 	private static int MOD = 1000000007;
 	static FastScanner sc = new FastScanner();
+	static StringBuilder sb = new StringBuilder();
 
 	public static void main(String[] args) throws IOException {
 		int T = sc.nextInt();
 		while (T-- > 0) {
 			solve();
 		}
+		System.out.print(sb);
 	}
 
 	static void solve() throws IOException {
 
-		System.out.println("hello");
+		long num = sc.nextLong() - 1;
+
+		long res = 1;
+
+		long two = 2;
+
+		while (num > 0) {
+			if ((num & 1) > 0)
+				res = (res * two) % MOD;
+			num >>= 1;
+			two = (two * two) % MOD;
+		}
+
+		sb.append(res + "\n");
 
 	}
 
